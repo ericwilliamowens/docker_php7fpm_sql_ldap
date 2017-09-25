@@ -10,16 +10,26 @@ RUN apt-get update --fix-missing && apt-get install -y locales unixodbc libgss3 
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 RUN apt-get update && apt-get install -y \
-    mysql-client \
-    libmcrypt-dev \
-    libmcrypt-dev \
-    libldap2-dev
+  libxrender1 \
+  libfontconfig1 \
+  libx11-dev \
+  libjpeg62 \
+  libxtst6
+
+RUN apt-get update && apt-get install -y \
+  mysql-client \
+  libmcrypt-dev \
+  libfreetype6-dev \
+  libjpeg62-turbo-dev \
+  libpng12-dev \
+  libldap2-dev
 
 # https://bugs.php.net/bug.php?id=49876
 RUN ln -fs /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/
 
 RUN echo "Installing PHP extensions" \
-  && docker-php-ext-install -j$(nproc) ldap mcrypt pdo_mysql \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+  && docker-php-ext-install -j$(nproc) ldap mcrypt pdo_mysql gd \
   && docker-php-ext-enable ldap mcrypt pdo_mysql
 
 
