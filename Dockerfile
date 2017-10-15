@@ -62,6 +62,8 @@ RUN echo "extension=php_sqlsrv_7_nts.so" >> /usr/local/etc/php/conf.d/sqlsvr.ini
     && echo "extension=php_pdo_sqlsrv_7_nts.so" >> /usr/local/etc/php/conf.d/sqlsvr.ini \
     && locale-gen
 
+ADD ./custom.ini /usr/local/etc/php/conf.d/
+
 CMD ["php-fpm", "-F"]
 
 EXPOSE 9000
